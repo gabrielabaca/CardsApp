@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% load static %}
+
+
+{% block Main %}
+<section class="container-fluid login-bg align-content-center">
+    <div class="row justify-content-center" style="height: 100%">
+<form class="v-row col-lg-4 ">
+
+    <h1 class="h3 mb-3 fw-normal">Recupera tu contraseña</h1>
+    <p class="text-danger "> DEBE CONFIGURAR ANTES UN SERVIDOR SMTP</p>
+    <div class="form-floating">
+        <input type="email" class="form-control form-sm" id="floatingInput" placeholder="name@example.com">
+        <label for="floatingInput">Email:</label>
+    </div>
+    
+
+    <button class="w-100 btn btn-sm btn-primary" type="submit">Enviar Contraseña</button>
+    
+</form>
+</div>
+</section>
+{% endblock %}

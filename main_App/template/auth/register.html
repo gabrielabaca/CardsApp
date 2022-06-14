@@ -1,0 +1,70 @@
+{% extends './base.html' %}
+{% load static %}
+
+
+{% block Main %}
+<section class="container-fluid register-bg align-content-center">
+    <div class="row justify-content-center" style="height: 100%">
+    {% if datos %}
+        <div class="v-row col-lg-4 usuariocreado text-center">
+            <h3>Su cuenta ah sido creada!</h3>
+            <h2>Bienvenido {{datos}}</h2>
+            <p>Inicie Sesion <a href="{% url 'ingresar' %}">aqui!</a></p>
+        </div>
+    {% else %}
+   
+    <form class="v-row col-lg-4" method="POST" action="register">
+
+    {% csrf_token %}
+    <h1 class="h3 mb-3 fw-normal">Registrate</h1>
+
+    <div class="form-floating">
+        <input type="text" class="form-control form-sm" name="first_name" id="first_name" placeholder="nombre">
+        <label for="first_name">Nombre</label>
+    </div>
+    <div class="form-floating">
+        <input type="text" class="form-control form-sm" name="last_name" id="last_name" placeholder="Apellido">
+        <label for="last_name">Apellido</label>
+    </div>
+    <div class="form-floating">
+        <input type="date" class="form-control form-sm" name="cumpleaños" id="cumpleaños" placeholder="Fecha de nacimiento">
+        <label for="cumpleaños">Fecha de nacimiento</label>
+    </div>
+    <div class="form-floating">
+        <input type="email" class="form-control form-sm" name="email" id="email" placeholder="name@example.com">
+        <label for="email">Mail</label>
+    </div>
+    <div class="form-floating">
+        <input type="text" class="form-control form-sm" name="username" id="username" placeholder="Usuario">
+        <label for="username">Usuario</label>
+    </div>
+    <div class="form-floating">
+        <input type="password" class="form-control" name="password1" id="password1" placeholder="Password">
+        <label for="password1">Password</label>
+        
+    </div>
+    <div class="form-floating">
+        <input type="password" class="form-control" name="password2" id="password2" placeholder="Password">
+        <label for="password2">Repetir Password</label>
+    </div>
+    <div class="checkbox mb-3">
+        <label>
+        <input type="checkbox" value="remember-me"> Terminos y condiciones
+        </label>
+    </div>
+    {% if mensaje %}
+        {% if mensaje.password_mismatch %}
+            <span class="text-danger"> Las contraseñas no coinciden</span>
+        {% else %}
+            <span class="text-danger">* {{mensaje}}</span>
+        {% endif %}
+    {% endif %}
+    
+
+    <button class="w-100 btn btn-sm btn-primary" type="submit">Enviar</button>
+    
+    </form>
+    {% endif %}
+</div>
+</section>
+{% endblock %}

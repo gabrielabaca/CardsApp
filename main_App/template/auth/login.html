@@ -1,0 +1,73 @@
+{% extends './base.html' %}
+{% load static %}
+
+
+{% block Main %}
+    <section class="container-fluid login-bg align-content-center">
+        <div class="row align-items-center" style="height: 100%">
+            <div class="align-self-center col-lg-9">
+            <div class="d-flex justify-content-center">
+                <div class="card" style="width: 35rem; height: 17rem;">
+                    <div class="card-header bg-transparent">
+                        <div clas="d-flex">
+                        <h5 class="card-title d-inline">Para: xxxxx</h5>
+                        <i class="fa-solid fa-person-digging d-inline junstify-self-end"></i>
+                        </div>
+                    </div>
+                    <div class="card-body ">
+                      <h6 class="card-subtitle mb-2 text-muted">Titulo</h6>
+                      <small class="text-muted">Mensaje:</small>
+                      <p class="card-text">{% lorem 15 w random %}  </p>
+                    </div>
+                    <div class="card-footer">
+                        <h6 class="card-">De: xxxx</h6>
+                        <small class="text-muted">Enviado hace: xxx/time</small>
+                    <div>
+                      <a href="#" class="card-link">Ver mas</a>
+                      <a href="#" class="card-link">Compartir</a>
+                      <a href="#" class="card-link">Enviar Mensaje</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-lg-2">
+            {% if not user.is_authenticated %}
+            <form method="POST" action="ingresar">
+            {% csrf_token %}
+            <h1 class="h3 mb-3 fw-normal">iniciar sesion</h1>
+        
+            <div class="form-floating">
+                <input type="text" class="form-control form-sm" name="username" id="username" placeholder="Usuario">
+                <label for="username">Usuario</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" name="password" id="pswd" placeholder="Password">
+                <label for="pswd">Password</label>
+            </div>
+        
+            <div class="checkbox mb-3">
+                <label>
+                <input type="checkbox" value="remember-me"> Recordarme
+                </label>
+            </div>
+            {% if mensaje %}
+            <span class="text-danger">* {{mensaje}}</span>
+            {% endif %}
+            <button class="w-100 btn btn-sm btn-primary" type="submit">Iniciar Sesion</button>
+            <a class="w-100 btn btn-sm btn-outline-primary" href="{% url 'register' %}" type="none">Registrarse</a>
+            <!-- <a href="{% url 'lostpswd' %}" class="float-end"> ¿Olvidaste tu contraseña? </a> -->
+            </form>
+            {% else %}
+            <div class="">
+                <h2 class="text text-center">Bienvenido {{ user.username }}</h2>
+                <button class="w-100 btn btn-sm btn-success">Ingresar</button>
+                <a href="{% url 'logout' %}"><button class="w-100 btn btn-sm btn-danger">Cerrar Sesion</button></a>
+            </div>
+            {% endif %} 
+            </div>
+        </div>
+
+      </section>
+
+   {% endblock %}

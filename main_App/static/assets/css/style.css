@@ -1,0 +1,82 @@
+/*--------------------------------------------------------------
+# Sections 
+--------------------------------------------------------------*/
+section {
+    padding: 60px 0;
+    
+}
+  
+.section-bg {
+    background-color: white;
+    min-height: 83vh;
+}
+  
+.section-title {
+    text-align: center;
+    padding-bottom: 30px;
+}
+.section-title h2 {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 0;
+    color: #0f394c;
+}
+.section-title p {
+    margin-bottom: 0;
+}
+
+
+/*--------------------------------------------------------------
+# Login
+--------------------------------------------------------------*/
+.login-bg {
+    height: 100vh;
+
+}
+
+.login-bg form input {
+    margin-top:5px
+}
+
+.login-bg .btn {
+    margin-top:5px;
+}
+
+.login-bg form a {
+    font-size: 14px;
+}
+
+
+/*--------------------------------------------------------------
+# Register
+--------------------------------------------------------------*/
+.register-bg {
+    height: 100vh;
+
+}
+
+.register-bg form input {
+    margin-top:5px
+}
+
+.register-bg .btn {
+    margin-top:5px;
+}
+
+.register-bg form a {
+    font-size: 14px;
+}
+
+.register-bg .usuariocreado{
+   border-style: solid;
+   border-radius: 25px;
+   border-width: 1px; 
+}
+.register-bg .usuariocreado h3{
+    margin-top:7rem
+}
+.register-bg .usuariocreado p{
+    margin-top:25px
+}
