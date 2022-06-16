@@ -7,28 +7,35 @@
         <div class="row align-items-center" style="height: 100%">
             <div class="align-self-center col-lg-9">
             <div class="d-flex justify-content-center">
-                <div class="card" style="width: 35rem; height: 17rem;">
+
+                <div class="card" aria-hidden="true" style="width: 35rem; height: 17rem;">
                     <div class="card-header bg-transparent">
                         <div clas="d-flex">
-                        <h5 class="card-title d-inline">Para: xxxxx</h5>
-                        <i class="fa-solid fa-person-digging d-inline junstify-self-end"></i>
+                        <h5 class="card-title placeholder-glow d-inline">Para: <span class="placeholder col-2"></span></h5>
+                        
                         </div>
                     </div>
-                    <div class="card-body ">
-                      <h6 class="card-subtitle mb-2 text-muted">Titulo</h6>
+                    <div class="card-body placeholder-glow">
+                      <h6 class="card-subtitle mb-2 text-muted placeholder col-2"></h6><br>
                       <small class="text-muted">Mensaje:</small>
-                      <p class="card-text">{% lorem 15 w random %}  </p>
+                      <p class="card-text">
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-6"></span>
+                        <span class="placeholder col-5"></span>
+                    </p>
                     </div>
                     <div class="card-footer">
-                        <h6 class="card-">De: xxxx</h6>
-                        <small class="text-muted">Enviado hace: xxx/time</small>
+                        <h6 class="card-">De: <span class="placeholder col-3"></span></h6>
+                        <small class="text-muted">Enviado hace: <span class="placeholder col-1"></span></small>
                     <div>
-                      <a href="#" class="card-link">Ver mas</a>
-                      <a href="#" class="card-link">Compartir</a>
-                      <a href="#" class="card-link">Enviar Mensaje</a>
+                      <a href="#" class="card-link"><i class="fa fa-share-nodes"></i></a>
+                      <a href="#" class="card-link"><i class="fa fa-envelope"></i></a>
+                      <a href="#" class="card-link"><i class="fa fa-star"></i></a>
                     </div>
                     </div>
                 </div>
+
             </div>
             </div>
             <div class="col-lg-2">
@@ -61,7 +68,7 @@
             {% else %}
             <div class="">
                 <h2 class="text text-center">Bienvenido {{ user.username }}</h2>
-                <button class="w-100 btn btn-sm btn-success">Ingresar</button>
+                <a href="{% url 'dashboard' %}"><button class="w-100 btn btn-sm btn-success">Ingresar</button></a>
                 <a href="{% url 'logout' %}"><button class="w-100 btn btn-sm btn-danger">Cerrar Sesion</button></a>
             </div>
             {% endif %} 

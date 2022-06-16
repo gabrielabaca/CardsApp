@@ -19,9 +19,10 @@ class Cards(models.Model):
     imagen = models.ImageField(upload_to='Cards/', null = True, blank = True)
     categoria = models.IntegerField(null = True)
     estado = models.IntegerField()
-
+    creacion = models.DateTimeField(auto_now=True)
+    
 class Relacion_Cards(models.Model):
-    id_card = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
+    id_card = models.ForeignKey(Cards, on_delete=models.CASCADE)
     id_usr = models.IntegerField()
     id_usr_to = models.IntegerField()
 
@@ -33,3 +34,4 @@ class Perfil_Links(models.Model):
 class Categorias_Cards(models.Model):
     id_card = models.IntegerField()
     id_categoria = models.IntegerField()
+    descripcion = models.CharField(max_length=40, default='NONE')

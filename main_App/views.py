@@ -1,8 +1,12 @@
 from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import UserManager, User
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from main_App.forms import FormularioRegister
-from .models import Usuarios
+from .models import Usuarios, Perfil_Links, Cards, Categorias_Cards, Relacion_Cards
+from datetime import timedelta
+
 # Create your views here.
 
 def ingresar(request):
@@ -50,3 +54,87 @@ def register(request):
 
 def lostpswd(request):
     return render(request, 'auth/lostpswd.html')
+
+@login_required(login_url='ingresar')
+def dashboard(request):
+    #Perfil de usuario
+    datosUsuario = Usuarios.objects.get(id_usuario=request.user.id)
+
+    perfilcards = ({
+        'enviadas' : len(Relacion_Cards.objects.filter(id_usr__iexact = request.user.id)), 
+        'recibidas': len(Relacion_Cards.objects.filter(id_usr_to__iexact = request.user.id)),
+        })
+    links = Perfil_Links.objects.filter(id_usr = request.user.id)
+
+    cards = []
+    i=0
+    
+    if(request.GET):
+        #Recibidas
+        if request.GET['action'] == 'recibidas':
+            for x in Relacion_Cards.objects.filter(id_usr_to__iexact = request.user.id):
+                cards.append({i:{}})
+                dates = timezone.now() - x.id_card.creacion
+                cards[i].update({
+                    'id': x.id_card.id,
+                    'titulo':x.id_card.titulo,
+                    'icon':x.id_card.icon,
+                    'text':x.id_card.texto,
+                    'imagen':x.id_card.imagen,
+                    'estado':x.id_card.estado,
+                    'left': (True if x.id % 2 == 1 else False),
+                    'categoria':[],
+                    'id_prop': User.objects.get(id=x.id_usr),
+                    'id_to': User.objects.get(id=x.id_usr_to),
+                    'creacion': f'{dates.days} dias'
+                })
+                for y in Categorias_Cards.objects.filter(id_card=x.id_card.id):
+                    cards[i]['categoria'].append(y.descripcion)
+                i += 1
+            return render(request, 'main/cards.html',{'datos':datosUsuario, 'perfilCards':perfilcards, 'links': links, 'cards':cards, 'cardsTitulo':'Tarjetas Recibidas'})
+        
+        #Enviadas
+        if (request.GET['action'] == 'enviadas'):
+            for x in Relacion_Cards.objects.filter(id_usr__iexact = request.user.id):
+                cards.append({i:{}})
+                dates = timezone.now() - x.id_card.creacion
+                cards[i].update({
+                    'id': x.id_card.id,
+                    'titulo':x.id_card.titulo,
+                    'icon':x.id_card.icon,
+                    'text':x.id_card.texto,
+                    'imagen':x.id_card.imagen,
+                    'estado':x.id_card.estado,
+                    'left': (True if x.id % 2 == 1 else False),
+                    'categoria':[],
+                    'id_prop': User.objects.get(id=x.id_usr),
+                    'id_to': User.objects.get(id=x.id_usr_to),
+                    'creacion': f'{dates.days} dias'
+                })
+                for y in Categorias_Cards.objects.filter(id_card=x.id_card.id):
+                    cards[i]['categoria'].append(y.descripcion)
+                i += 1
+            return render(request, 'main/cards.html',{'datos':datosUsuario, 'perfilCards':perfilcards, 'links': links, 'cards':cards, 'cardsTitulo':'Tarjetas Enviadas'})
+        
+    #Todas las tarjetas
+    
+    for x in Cards.objects.all():
+        cards.append({i:{}})
+        dates = timezone.now() - x.creacion
+        cards[i].update({
+            'id': x.id,
+            'titulo':x.titulo,
+            'icon':x.icon,
+            'text':x.texto,
+            'imagen':x.imagen,
+            'estado':x.estado,
+            'left': (True if x.id % 2 == 1 else False),
+            'categoria':[],
+            'id_prop': User.objects.get(id=(Relacion_Cards.objects.get(id_card=x.id).id_usr)),
+            'id_to': User.objects.get(id=(Relacion_Cards.objects.get(id_card=x.id).id_usr_to)),
+            'creacion': f'{dates.days} dias'
+        })
+        for y in Categorias_Cards.objects.filter(id_card=x.id):
+            cards[i]['categoria'].append(y.descripcion)
+        i += 1
+    return render(request, 'main/cards.html',{'datos':datosUsuario, 'perfilCards':perfilcards, 'links': links, 'cards':cards, 'cardsTitulo':'Todas las tarjetas'})

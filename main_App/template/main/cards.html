@@ -1,0 +1,53 @@
+{% extends 'main/dashboard.html' %}
+{% load static %}
+
+{% block Dashboard %}
+<div class="timeline">
+    <div class="titulo-cards text-center"><h2 class="">{{ cardsTitulo }}</h2></div>
+    {% for x in cards %}
+      <div class="tm-container {% if x.left == True %} left {% else %} right {% endif %}">
+        <div class="card" aria-hidden="true">
+          <div class="card-header bg-transparent">
+              <div clas="d-flex">
+              <h5 class="card-title placeholder-glow d-inline">Para: 
+                  {% if x.estado == 2 %}
+                  <span class="placeholder col-2"></span>
+                  {% else %}
+                  {{ x.id_to }}
+                  {% endif %} 
+                  <span>
+                      <a data-bs-toggle="tooltip" title="Categoria: {{ x.categoria }}"><i class="fa fa-solid {{ x.icon }}"></i></a>
+                      {% if x.estado == 1 %}
+                      <a data-bs-toggle="tooltip" title="Visto" class="text-success"><i class="fa fa-check"></i></a>
+                      {% endif %}
+                      {% if x.estado == 2%}
+                      <a data-bs-toggle="tooltip" title="Privado" class="text-danger"><i class="fa fa-eye-slash"></i></a>
+                      {% endif %}
+                  </span>
+              </h5>
+              
+              </div>
+          </div>
+          <div class="card-body placeholder-glow">
+            <h6 class="card-subtitle mb-2 text-muted ">{{x.titulo}}</h6>
+            <small class="text-muted">Mensaje:</small>
+            <p class="card-text">
+              {{x.text}}
+          </p>
+          </div>
+          <div class="card-footer">
+              <h6 class="card-">De: {{ x.id_prop }} </h6>
+              <small class="text-muted">Enviado hace:  {{ x.creacion }}</small>
+          <div>
+            <a href="#" class="card-link"><i class="fa fa-share-nodes"></i></a>
+            <a href="#" class="card-link"><i class="fa fa-envelope"></i></a>
+            <a href="#" class="card-link"><i class="fa fa-star"></i></a>
+          </div>
+          </div>
+      </div>
+      </div>
+      {% endfor %}
+      
+    </div>
+
+    {% endblock %}
