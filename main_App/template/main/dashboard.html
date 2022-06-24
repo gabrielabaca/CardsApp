@@ -8,17 +8,29 @@
 
     <div class="col-lg-3 perfil">
         <div class="d-grid container border">
-            <img class=" img-fluid mx-auto d-block rounded-circle" src="{{ datos.avatar.url }}">
+            <a href="#" data-bs-toggle="tooltip" title="Editar Avatar">
+            <img class=" img-fluid mx-auto d-block rounded-circle" src=
+            {% if datos.avatar %}
+            {{ datos.avatar.url }}
+            {% else %}
+            "{% static '/assets/img/default-avatar.jpg' %}"
+            {% endif %}>
+            </a>
             <div class="d-flex justify-content-center  text-center">
                 <h3 class="text-center">{{user.get_full_name}} </h3>
-                <a href="#" data-bs-toggle="tooltip" title="Editar Perfil"> <i class="fa fa-edit"></i></a>
             </div>
             <span class="text-muted text-center">{{ datos.cumpleaños }} </span>
-            <h5 class="text-start">Perfil: </h5>
-            <p class="blockquote text-wrap">
+            
+            <a href="#" style="text-decoration: none; color:black" data-bs-toggle="tooltip" title="Editar Perfil">
+                <p class="blockquote text-wrap fst-italic fs-6 text" >
+                {% if datos.perfil %}
                 {{datos.perfil}}
-                
+                {% else %}
+                    Click para editar tu informacion de perfil
+                {% endif %}
             </p>
+            </a>
+
             <ul class="nav justify-content-center">
                 {% for x in links %}
                 <li class="nav-item">
@@ -54,6 +66,7 @@
     <div class="col-lg-9 bg-light border dashboard">
     {% block Dashboard %}
     {% endblock %}
+    
     </div>
 </div>
 

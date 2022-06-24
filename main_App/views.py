@@ -1,8 +1,11 @@
-from django.shortcuts import render,redirect,HttpResponse
+from typing import TextIO
+from django import http
+from django.shortcuts import render,HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.http import JsonResponse
 from main_App.forms import FormularioRegister
 from .models import Usuarios, Perfil_Links, Cards, Categorias_Cards, Relacion_Cards
 from datetime import timedelta
@@ -138,3 +141,58 @@ def dashboard(request):
             cards[i]['categoria'].append(y.descripcion)
         i += 1
     return render(request, 'main/cards.html',{'datos':datosUsuario, 'perfilCards':perfilcards, 'links': links, 'cards':cards, 'cardsTitulo':'Todas las tarjetas'})
+
+
+@login_required(login_url='ingresar')
+def nuevaCard(request):
+
+    if request.POST:
+        faicon = ''
+        categoria = ''
+        if request.POST['card-categoria'] == '1' :
+            faicon = 'fa-cake-candles'
+            categoria = 'Aniversario'
+        if request.POST['card-categoria'] == '2' :
+            faicon = 'fa-cake-candles'
+            categoria = 'Cumpleaños'
+        elif request.POST['card-categoria'] == '3' :
+            faicon = 'fa-graduation-cap'
+            categoria = 'Estudiantes'
+        elif request.POST['card-categoria'] == '4' :
+            faicon = 'fa-heart'
+            categoria = 'SanValentin'
+        
+        card = Cards(
+            titulo = request.POST['card-titulo'],
+            icon = faicon,
+            texto = request.POST['card-mensaje'],
+            categoria = request.POST['card-categoria'],
+            estado = ('2' if(request.POST['card-privada'] == 'card-privada') else '0'),
+            )
+        
+        card.save()
+        rCard = Relacion_Cards(
+            id_card = card,
+            id_usr = request.user.id,
+            id_usr_to = request.POST['card-id-to'],
+        )
+        rCard.save()
+
+        cCard = Categorias_Cards(
+            id_card = card.id,
+            id_categoria = card.categoria,
+            descripcion = categoria,
+        )
+
+        cCard.save()
+        return HttpResponse(f'CARD-ID: {card.id} rCardID: {rCard.id} cCardID: {cCard.id}')
+
+##JSONS
+@login_required(login_url='ingresar')
+def getUsers(request):
+
+    users = {'usersList':[]}
+    for x in User.objects.all().exclude(id = request.user.id):
+        users['usersList'].append({'id':x.id, 'username':x.username, 'email':x.email})
+
+    return JsonResponse(users)

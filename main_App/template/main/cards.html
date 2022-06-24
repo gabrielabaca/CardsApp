@@ -2,6 +2,102 @@
 {% load static %}
 
 {% block Dashboard %}
+<div class="modal fade modal-lg" tabindex="-1" id="modal-card">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Crear tarjeta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form method="post" action="/nuevaCard" id="formnuevacard">
+          {% csrf_token %}
+        <div class="container-fluid" >
+        <div class=" row">
+        
+        <div class="card col-lg-8" aria-hidden="true" style="min-height: 17rem;">
+          <div class="card-header bg-transparent">
+              <div clas="d-flex">
+                <label for="card-to" class="form-label">Para: ...</label>
+                <input type="text" class="form-control" id="card-to" name="card-to" maxlength="40">
+                <input hidden type="number" id="card-id-to" name="card-id-to" >
+                <ul id='getUsersUl' role='listbox' aria-label='Resultado Users'> </ul>
+              </div>
+          </div>
+          <div class="card-body ">
+            <div class="col-lg-6">
+              <input 
+                type="text" 
+                placeholder="Escribe un titulo..." 
+                class="form-control " 
+                id="card-titulo"
+                maxlength="120"
+                name="card-titulo"
+              >
+            </div>
+            <small class="text-muted">Mensaje:</small>
+            <p class="card-text">
+              <textarea 
+                class="form-control" 
+                name="card-mensaje" 
+                id="card-mensaje" 
+                rows="5" 
+                maxlength="250" 
+                name="card-mensaje"
+                >
+              </textarea>
+          </p>
+          </div>
+          <div class="card-footer">
+              <h6 class="card-">De: {{user.get_full_name}}</h6>
+              <small class="text-muted">Enviado:  {% now "d/m/Y" %}</small>
+          <div>
+            <a href="#" class="card-link"><i class="fa fa-share-nodes"></i></a>
+            <a href="#" class="card-link"><i class="fa fa-envelope"></i></a>
+            <a href="#" class="card-link"><i class="fa fa-star"></i></a>
+          </div>
+          </div>
+      </div>
+        <div class="col-lg-4">
+          <label for="card-categoria" class="form-label">Elije un categoria para la tarjeta:</label>
+          <select 
+            class="form-select form-select-sm" 
+            aria-label=".form-select-sm example"
+            id="card-categoria"
+            name="card-categoria"
+          >
+            <option value="1" selected>Aniversario</option>
+            <option value="2">Cumpleaños</option>
+            <option value="3">Estudiantes</option>
+            <option value="4">SanValentin</option>
+          </select>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="card-privada" id="card-privada" name="card-privada">
+            <label class="form-check-label" for="card-privada">
+              Tarjeta privada
+            </label>
+          </div>
+          <!-- <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="card-email" id="card-email" name="card-email">
+            <label class="form-check-label" for="card-email">
+              Enviar por email
+            </label>
+          </div> -->
+        </div>
+      
+      </div>  
+      </div>
+      </form>
+    </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="formnuevacard">Enviar tarjeta</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="timeline">
     <div class="titulo-cards text-center"><h2 class="">{{ cardsTitulo }}</h2></div>
     {% for x in cards %}
@@ -47,7 +143,68 @@
       </div>
       </div>
       {% endfor %}
-      
+      <button class="btn btn-info btn-float" type="button" data-bs-toggle="modal" data-bs-target="#modal-card">Crear Card <i class="fa fa-plus"></i></button>
     </div>
 
+    <script type="text/javascript">
+      var userList = []
+      var userInput = document.querySelector('#card-to')
+      var getUsersUl = document.querySelector('#getUsersUl')
+      var cardIdTo = document.querySelector('#card-id-to')
+
+      function init(){
+        fetch('/getUsers').then(res => res.json()).then(data => {
+          userList.push(data.usersList)
+        });
+        userInput.addEventListener('keydown', (event) => {getUsers(event)})
+        getUsersUl.addEventListener("click", (event) => {getUsersClick(event);});
+      }
+      
+      function getUsers(event){
+        const value = userInput.value;
+        const results = userList[0].filter(res => {
+          
+          return res.username.toLowerCase().startsWith(value.toLowerCase());
+        })
+  
+          getUsersUl.innerHTML = results.map((result, index) => {
+            
+            const isSelected = index === 0;
+            return `
+              <li
+                id='autocomplete-result-${index}'
+                class='autocomplete-result${isSelected ? ' selected' : ''}'
+                role='option'
+              ${isSelected ? "aria-selected='true'" : ''}
+                value=${result.id}
+              >
+                ${result.username}
+              </li>
+      `
+          }).join('');
+            getUsersUl.classList.remove('hidden');
+      }
+
+      function getUsersClick() {
+        if (event.target && event.target.nodeName === 'LI') {
+        selectItem(event.target)
+        }
+      }
+
+      function selectItem(node) {
+        if (node) {
+          userInput.value = node.innerText;
+          cardIdTo.value = node.value;
+          hideResults();
+        }
+      }
+
+      function hideResults() {
+        this.getUsersUl.innerHTML = '';
+        this.getUsersUl.classList.add('hidden');
+      }
+      
+      init()
+    </script>
+    
     {% endblock %}
