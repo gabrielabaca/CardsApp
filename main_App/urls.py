@@ -12,4 +12,5 @@ urlpatterns = [
     path('nuevaCard', views.nuevaCard),
     ## JSONS
     path('getUsers', views.getUsers),
+    path('getCard', views.getRandon),
 ]

@@ -187,6 +187,8 @@ def nuevaCard(request):
         cCard.save()
         return HttpResponse(f'CARD-ID: {card.id} rCardID: {rCard.id} cCardID: {cCard.id}')
 
+
+
 ##JSONS
 @login_required(login_url='ingresar')
 def getUsers(request):
@@ -196,3 +198,28 @@ def getUsers(request):
         users['usersList'].append({'id':x.id, 'username':x.username, 'email':x.email})
 
     return JsonResponse(users)
+
+
+@login_required(login_url='ingresar')
+def getRandon(request):
+
+    cards = {}
+    data = Relacion_Cards.objects.order_by('?').first()
+    dates = timezone.now() - data.id_card.creacion
+    cards.update({
+        'id': data.id_card.id,
+        'titulo':data.id_card.titulo,
+        'icon': data.id_card.icon,
+        'text': data.id_card.texto,
+        #'imagen': data.id_card.imagen.url,
+        'estado': data.id_card.estado,
+        'left': (True if data.id % 2 == 1 else False),
+        'categoria':[],
+        'id_prop': (User.objects.get(id=data.id_usr).username if data.id_card.estado != 2 else 'Privado'),
+        'id_to': (User.objects.get(id=data.id_usr_to).username if data.id_card.estado != 2 else 'Privado'),
+        'creacion': f'{dates.days} dias'
+    })
+    for y in Categorias_Cards.objects.filter(id_card=data.id_card.id):
+        cards['categoria'].append(y.descripcion)
+    
+    return JsonResponse(cards)

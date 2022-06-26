@@ -152,6 +152,23 @@ nav .dropdown-menu[data-bs-popper]{
 #getUsersUl .hidden {
   display: none;
 }
+
+/*-------------------------------------------------------------
+# LOADING
+---------------------------------------------------------------*/
+
+.loading{
+  position: absolute; 
+  width: 100%; 
+  height: 100%; 
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  background-color: rgb(180, 180, 180, 0.3);
+  backdrop-filter: blur(2px);
+  transition: all 2s;
+  transition-duration: 2s;
+}
+
 /*--------------------------------------------------------------
 # Register
 --------------------------------------------------------------*/
