@@ -1,12 +1,12 @@
 from typing import TextIO
 from django import http
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import redirect, render,HttpResponse
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, UserManager
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.http import JsonResponse
-from main_App.forms import FormularioRegister
+from main_App.forms import FormularioRegister, FormularioEditarPerfil
 from .models import Usuarios, Perfil_Links, Cards, Categorias_Cards, Relacion_Cards
 from datetime import timedelta
 
@@ -29,7 +29,6 @@ def ingresar(request):
 def register(request):
     
     if request.POST:
-
         if User.objects.filter(username=request.POST["username"]):
             return render(request, 'auth/register.html', {'mensaje': f'El usuario <b>{request.POST["username"]}</b> ya existe'})
         elif User.objects.filter(email = request.POST['email']):
@@ -69,6 +68,7 @@ def dashboard(request):
         })
     links = Perfil_Links.objects.filter(id_usr = request.user.id)
 
+    left = True
     cards = []
     i=0
     
@@ -85,12 +85,13 @@ def dashboard(request):
                     'text':x.id_card.texto,
                     'imagen':x.id_card.imagen,
                     'estado':x.id_card.estado,
-                    'left': (True if x.id % 2 == 1 else False),
+                    'left': (True if left else False),
                     'categoria':[],
                     'id_prop': User.objects.get(id=x.id_usr),
                     'id_to': User.objects.get(id=x.id_usr_to),
                     'creacion': f'{dates.days} dias'
                 })
+                left = (False if left else True)
                 for y in Categorias_Cards.objects.filter(id_card=x.id_card.id):
                     cards[i]['categoria'].append(y.descripcion)
                 i += 1
@@ -108,12 +109,13 @@ def dashboard(request):
                     'text':x.id_card.texto,
                     'imagen':x.id_card.imagen,
                     'estado':x.id_card.estado,
-                    'left': (True if x.id % 2 == 1 else False),
+                    'left': (True if left else False),
                     'categoria':[],
                     'id_prop': User.objects.get(id=x.id_usr),
                     'id_to': User.objects.get(id=x.id_usr_to),
                     'creacion': f'{dates.days} dias'
                 })
+                left = (False if left else True)
                 for y in Categorias_Cards.objects.filter(id_card=x.id_card.id):
                     cards[i]['categoria'].append(y.descripcion)
                 i += 1
@@ -131,12 +133,13 @@ def dashboard(request):
             'text':x.texto,
             'imagen':x.imagen,
             'estado':x.estado,
-            'left': (True if x.id % 2 == 1 else False),
+            'left': (True if left else False),
             'categoria':[],
             'id_prop': User.objects.get(id=(Relacion_Cards.objects.get(id_card=x.id).id_usr)),
             'id_to': User.objects.get(id=(Relacion_Cards.objects.get(id_card=x.id).id_usr_to)),
             'creacion': f'{dates.days} dias'
         })
+        left = (False if left else True)
         for y in Categorias_Cards.objects.filter(id_card=x.id):
             cards[i]['categoria'].append(y.descripcion)
         i += 1
@@ -186,8 +189,76 @@ def nuevaCard(request):
 
         cCard.save()
         return HttpResponse(f'CARD-ID: {card.id} rCardID: {rCard.id} cCardID: {cCard.id}')
+        
+@login_required(login_url='ingresar')
+def imagenPerfil(request):
+    if request.POST:
+        
+        usuario = Usuarios.objects.get(id_usuario = request.user.id)
+        nuevaImagen = Usuarios(
+            id = usuario.id, 
+            id_usuario = request.user, 
+            avatar = request.FILES['nuevaImagen'],
+            cumpleaños = usuario.cumpleaños,
+            perfil = usuario.perfil,
+            links = usuario.links,
+            estado = usuario.estado)
 
+        nuevaImagen.save()
+        return redirect(dashboard)
 
+@login_required(login_url='ingresar')
+def editarPerfil(request):
+    #Perfil de usuario
+    datosUsuario = Usuarios.objects.get(id_usuario=request.user.id)
+    perfilcards = ({
+        'enviadas' : len(Relacion_Cards.objects.filter(id_usr__iexact = request.user.id)), 
+        'recibidas': len(Relacion_Cards.objects.filter(id_usr_to__iexact = request.user.id)),
+        })
+
+    links = Perfil_Links.objects.filter(id_usr = request.user.id)
+
+    if request.POST:
+        if request.POST['btnPerfil']:
+            formulario = FormularioEditarPerfil(request.POST)
+            if formulario.is_valid():
+                datos = formulario.cleaned_data
+                print(formulario)
+                usuario = Usuarios.objects.get(id_usuario = request.user.id)
+                editarPerfil = Usuarios(
+                id = usuario.id, 
+                id_usuario = request.user, 
+                avatar = usuario.avatar,
+                cumpleaños = datos['cumpleaños'],
+                perfil = datos['perfil'],
+                links = usuario.links,
+                estado = usuario.estado)
+                editarPerfil.save()
+
+                changeUser = User.objects.get(pk=request.user.id)
+                changeUser.email = datos['email']
+                changeUser.first_name = datos['first_name']
+                changeUser.last_name = datos['last_name']
+
+                changeUser.save()
+
+                return render(request, 'main/editarperfil.html', {'datos':datosUsuario, 'perfilCards':perfilcards, 'success':True})
+
+            else:
+                return render(request, 'main/editarperfil.html', {'datos':datosUsuario, 'perfilCards':perfilcards, 'error':'Por favor revisa los datos ingresados'})
+        
+        elif request.POST['password1']:
+            if request.POST['password1'] == request.POST['password2']:
+                user = User.objects.get(pk = request.user.id)
+
+                user.set_password(request.POST['password1'])
+                user.save()
+                return render(request, 'main/editarperfil.html', {'datos':datosUsuario, 'perfilCards':perfilcards, 'error':'Se cambio la contraseña'})
+            else:
+                return render(request, 'main/editarperfil.html', {'datos':datosUsuario, 'perfilCards':perfilcards, 'error':'Las contraseñas no coinciden'})
+            
+
+    return render(request, 'main/editarperfil.html', {'datos':datosUsuario, 'perfilCards':perfilcards,'links':links})
 
 ##JSONS
 @login_required(login_url='ingresar')

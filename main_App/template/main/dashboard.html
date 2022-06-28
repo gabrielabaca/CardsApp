@@ -3,13 +3,50 @@
 
 
 {% block Main %}
+<div class="modal fade modal-lg" tabindex="-1" id="modal-imagen-perfil">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cambiar foto de perfil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+  
+          <form enctype="multipart/form-data" method="post" action="/imagenPerfil" id="formcambiarimagen">
+            {% csrf_token %}
+          <div class="container-fluid" >
+          <div class=" row">
+            <img class="col-lg-4 img-fluid mx-auto d-block rounded-circle" id="nuevaImagen" src=
+            {% if datos.avatar %}
+            {{ datos.avatar.url }}
+            {% else %}
+            "{% static '/assets/img/default-avatar.jpg' %}"
+            {% endif %}>
+            <div class="mb-3">
+                <label for="inputNuevaImagen" class="form-label">Subir nueva foto de perfil</label>
+                <input class="form-control form-control-sm" required id="inputNuevaImagen" name="nuevaImagen" type="file" accept="image/*">
+              </div>
+          <div class="col-lg-4">
+            
+          </div>
+        
+        </div>  
+        </div>
+        </form>
+      </div>
+        <div class="modal-footer">
+         <button type="submit" class="btn btn-primary" form="formcambiarimagen">Cambiar foto de perfil</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <div class="row container-fluid ">
 
     <div class="col-lg-3 perfil">
         <div class="d-grid container border">
-            <a href="#" data-bs-toggle="tooltip" title="Editar Avatar">
-            <img class=" img-fluid mx-auto d-block rounded-circle" src=
+            <a href="#" data-bs-toggle="modal" type="button" data-bs-toggle="modal" data-bs-target="#modal-imagen-perfil">
+            <img class=" img-fluid mx-auto d-block rounded-circle" data-bs-toggle="tooltip" title="Editar Avatar" src=
             {% if datos.avatar %}
             {{ datos.avatar.url }}
             {% else %}
@@ -21,8 +58,8 @@
             </div>
             <span class="text-muted text-center">{{ datos.cumpleaños }} </span>
             
-            <a href="#" style="text-decoration: none; color:black" data-bs-toggle="tooltip" title="Editar Perfil">
-                <p class="blockquote text-wrap fst-italic fs-6 text" >
+            <a href="/editarPerfil" style="text-decoration: none; color:black"  >
+                <p class="blockquote text-wrap fst-italic fs-6 text dash-perfil" data-bs-toggle="tooltip" title="Editar Perfil" >
                 {% if datos.perfil %}
                 {{datos.perfil}}
                 {% else %}
@@ -31,35 +68,35 @@
             </p>
             </a>
 
-            <ul class="nav justify-content-center">
+            <!-- 
+              ### No llego a entregar con los links!!!! =(
+              <ul class="nav justify-content-center">
                 {% for x in links %}
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{{ x.link }}"><i class="fa fa-brands {{ x.icon }}"></i></a>
                   </li>
                 {% endfor %}
                 
-            </ul>
+            </ul> -->
         </div>
         <ul class="list-group">
-            <a class="list-group-item list-group-item-action" href="?action=enviadas">
+            <a class="list-group-item list-group-item-action" href="dashboard?action=enviadas">
             <li class="d-flex justify-content-between align-items-center">
                 Tarjetas enviadas
                 <span class="badge bg-primary rounded-pill">{{ perfilCards.enviadas }}</span>
             </li>
             </a>
-            <a class="list-group-item list-group-item-action" href="?action=recibidas">
+            <a class="list-group-item list-group-item-action" href="dashboard?action=recibidas">
                 <li class="d-flex justify-content-between align-items-center">
                     Tarjetas Recibidas
                     <span class="badge bg-success rounded-pill">{{ perfilCards.recibidas }} </span>
                 </li>
             </a>
-        </ul>
-        <ul class="list-group">
-            <a class="list-group-item list-group-item-action" href="?action=">
-                <li class="d-flex justify-content-between align-items-center">
-                    Todas las tarjetas
-                </li>
-            </a>
+            <a class="list-group-item list-group-item-action" href="dashboard?action=">
+              <li class="d-flex justify-content-between align-items-center">
+                  Todas las tarjetas
+              </li>
+          </a>
         </ul>
     </div>
 
@@ -69,7 +106,15 @@
     
     </div>
 </div>
-
+<script type="text/javascript">
+    inputNuevaImagen = document.querySelector('#inputNuevaImagen')
+    inputNuevaImagen.onchange = evt => {
+  const [file] = inputNuevaImagen.files
+  if (file) {
+    nuevaImagen.src = URL.createObjectURL(file)
+  }
+}
+</script>
 
     
 {% endblock %}

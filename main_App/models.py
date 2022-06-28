@@ -5,11 +5,11 @@ from django.db import models
 
 class Usuarios(models.Model):
     id_usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    cumpleaños = models.DateField()
+    cumpleaños = models.DateField(null=True)
     avatar = models.ImageField(upload_to='Avatares/', null = True, blank = True)
-    perfil = models.TextField()
+    perfil = models.TextField(null=True)
     links = models.IntegerField(null = True)
-    estado = models.IntegerField()
+    estado = models.IntegerField(null=True)
 
 
 class Cards(models.Model):

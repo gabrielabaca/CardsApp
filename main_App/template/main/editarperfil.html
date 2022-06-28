@@ -1,0 +1,106 @@
+{% extends 'main/dashboard.html' %}
+{% load static %}
+
+{% block Dashboard %}
+<div class="modal fade" tabindex="-1" id="modal-contraseña">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cambiar Contraseña</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body ">
+        <div class="row justify-content-center">
+            
+          <form  enctype="multipart/form-data" method="POST" action="editarPerfil" id="cambiarContraseña">
+            {% csrf_token %}
+            <div class="form-floating">
+                <input required type="password" class="form-control form-sm" name="password1" id="password1" placeholder="nombre">
+                <label for="password1">Nueva contraseña</label>
+            </div>
+            <div class="form-floating">
+                <input required type="password" class="form-control form-sm" name="password2" id="password2" placeholder="nombre">
+                <label for="password2">Repetir contraseña</label>
+            </div>
+            <span class="text-danger" id="pswdError"></span>
+        </form>
+        </div>
+      </div>
+        <div class="modal-footer">
+         <button type="submit" class="btn btn-danger" form="cambiarContraseña" id="btnPassword">Cambiar contraseña</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<section class="container-fluid col-lg-8 editar-perfil-bg align-content-center">
+    <div class="row justify-content-center" style="height: 100%">
+    {% if success %}
+    <div class="v-row col-lg-6 text-center align-content-center">
+        <h3 class="text-success">Perfil editado!</h3>
+        <a href="/dashboard">Volver</a>
+    </div>
+    {% else %}
+    <form class="v-row " method="POST" action="editarPerfil">
+    
+    {% if error %}
+        <p class="text text-danger"> {{ error }}</p>
+    {% endif %}
+
+    {% csrf_token %}
+    <h1 class="h3 mb-3 fw-normal">Editar perfil </h1>
+
+    <div class="form-floating">
+        <input type="text" class="form-control form-sm" name="first_name" id="first_name" placeholder="nombre" value="{{ datos.id_usuario.first_name}}">
+        <label for="first_name">Nombre</label>
+    </div>
+    <div class="form-floating">
+        <input type="text" class="form-control form-sm" name="last_name" id="last_name" placeholder="Apellido" value="{{ datos.id_usuario.last_name }}">
+        <label for="last_name">Apellido</label>
+    </div>
+    <div class="form-floating">
+        <input type="date" class="form-control form-sm" name="cumpleaños" id="cumpleaños" placeholder="Fecha de nacimiento" value="{{ datos.cumpleaños|date:"Y-m-d" }}">
+        <label for="cumpleaños">Fecha de nacimiento</label>
+    </div>
+    <div class="form-floating">
+        <input type="email" class="form-control form-sm" name="email" id="email" placeholder="name@example.com" value="{{ datos.id_usuario.email}}">
+        <label for="email">Mail</label>
+    </div>
+    <div class="form-data">
+        <textarea class="form-control" name="perfil" id="perfil" rows="3" maxlength="250" placeholder="Texto de perfil">{{ datos.perfil }}</textarea>
+        
+    </div>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#modal-contraseña"><button class="btn btn-danger btn-sm" type="button">Cambiar contraseña</button></a>
+
+    <button class="w-100 btn btn-sm btn-primary" type="submit" name="btnPerfil" value="btnPerfil">Guardar</button>
+    
+    </form>
+    {% endif %}
+</div>
+</section>
+
+<script type="text/javascript">
+    password1 = document.querySelector('#password1')
+    password2 = document.querySelector('#password2')
+    btnPassword = document.querySelector('#btnPassword')
+    pswdError = document.querySelector('#pswdError')
+    password2.addEventListener('keyup', (event) => {checkPassword(event)})
+    btnPassword.addEventListener('click', (event) => {checkPassword(event)})
+
+    function checkPassword(event) {
+        
+        if(password1.value != password2.value || password1.value == '' || password2.value == ''){
+            event.preventDefault()
+            console.log('NO COINCIDE')
+            password2.classList.add('is-invalid')
+            pswdError.innerHTML = '* Las contraseñas no coinciden'
+        }else{
+
+            pswdError.innerHTML = ''
+            password2.classList.remove('is-invalid')
+            password1.classList.add('is-valid')
+            password2.classList.add('is-valid')
+        }
+    }
+</script>
+{% endblock %}

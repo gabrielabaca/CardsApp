@@ -46,18 +46,70 @@ nav .dropdown-menu[data-bs-popper]{
 # PERFIL
 --------------------------------------------------------------*/
 .perfil {
-    margin-top: 25px;
+  margin-top: 25px;
+  background-color: rgba(16, 16, 16); 
     
+}
+.perfil .d-grid{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  background-color: white;
+  
 }
 .perfil img{
     margin-top:25px;
     max-height: 150px;
+}
+.perfil ul{
+  border-radius: 0%;
+}
+.perfil .dash-perfil{
+  max-height: 17vh;
+  overflow: scroll;
+}
+
+.perfil .dash-perfil::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.perfil .dash-perfil::-webkit-scrollbar:vertical {
+  width:10px;
+}
+
+.perfil .dash-perfil::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+  display: none;
+} 
+
+.perfil .dash-perfil::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+.perfil .dash-perfil::-webkit-scrollbar-thumb {
+  background-color: #797979;
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+}
+
+.perfil .dash-perfil::-webkit-scrollbar-track {
+  border-radius: 10px;  
+}
+/*--------------------------------------------------------------
+# EDITAR PERFIL
+--------------------------------------------------------------*/
+.editar-perfil-bg div{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.editar-perfil-bg .btn-danger{
+  margin-bottom: 2%;
 }
 /*--------------------------------------------------------------
 # DASHBOARD
 --------------------------------------------------------------*/
 .dashboard:root{}
 .dashboard {
+  height: 89vh;
   max-height: 90vh;
   overflow:auto;
 }
@@ -95,8 +147,13 @@ nav .dropdown-menu[data-bs-popper]{
 # Login
 --------------------------------------------------------------*/
 .login-bg {
-    height: 100vh;
-
+  height: 100vh;
+  background-image: url('../img/background.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: darken; 
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .login-bg form input {
@@ -110,6 +167,67 @@ nav .dropdown-menu[data-bs-popper]{
 .login-bg form a {
     font-size: 14px;
 }
+
+.login-bg .formlogin{
+  background-color: rgba(16, 16, 16, 0.7); 
+  padding: 45px 20px; 
+  border-radius: 1%;
+}
+.login-bg .formlogin h1, .login-bg .formlogin .checkbox, .login-bg .formlogin h2 {
+  color: white
+}
+
+.login-bg .formlogin .btn{
+  border-radius: 0%;
+}
+
+/*--------------------------------------------------------------
+# Register
+--------------------------------------------------------------*/
+.register-bg {
+  min-height: 100vh;
+  background-image: url('../img/background.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: darken; 
+  background-color: rgba(0, 0, 0, 0.5);
+  background-attachment: fixed;
+}
+
+.register-bg form{
+  background-color: rgba(16, 16, 16, 0.7); 
+  padding: 45px 20px; 
+  border-radius: 1%;
+}
+.register-bg form input{
+  margin-top:5px
+}
+.register-bg form h1, .register-bg form .checkbox{
+  color: white;
+}
+
+.register-bg .btn {
+  margin-top:5px;
+  border-radius: 0%;
+}
+
+.register-bg form a {
+  font-size: 14px;
+}
+
+.register-bg .usuariocreado{
+ border-style: solid;
+ border-radius: 25px;
+ border-width: 1px; 
+}
+.register-bg .usuariocreado h3{
+  margin-top:7rem
+}
+.register-bg .usuariocreado p{
+  margin-top:25px
+}
+
 
 /*--------------------------------------------------------------
 # CARDS
@@ -153,6 +271,11 @@ nav .dropdown-menu[data-bs-popper]{
   display: none;
 }
 
+.card .icons a{
+color:black;
+text-decoration: none;
+font-size: 19px;
+}
 /*-------------------------------------------------------------
 # LOADING
 ---------------------------------------------------------------*/
@@ -169,44 +292,28 @@ nav .dropdown-menu[data-bs-popper]{
   transition-duration: 2s;
 }
 
+
 /*--------------------------------------------------------------
-# Register
+# Timeline
 --------------------------------------------------------------*/
-.register-bg {
-    height: 100vh;
-
-}
-
-.register-bg form input {
-    margin-top:5px
-}
-
-.register-bg .btn {
-    margin-top:5px;
-}
-
-.register-bg form a {
-    font-size: 14px;
-}
-
-.register-bg .usuariocreado{
-   border-style: solid;
-   border-radius: 25px;
-   border-width: 1px; 
-}
-.register-bg .usuariocreado h3{
-    margin-top:7rem
-}
-.register-bg .usuariocreado p{
-    margin-top:25px
-}
-
   /* The actual timeline (the vertical ruler) */
   .timeline {
     position: relative;
     margin: 0 auto;
   }
   
+  .timeline .btn{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #fe7b17;
+    color:#fe7b17;
+  }
+  .timeline .btn:hover{
+    background-color: #fe7b17;
+    border-color: #fe7b17;
+    color: white;
+  }
+
   /* The actual timeline (the vertical ruler) */
   .timeline::after {
     content: '';

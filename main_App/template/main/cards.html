@@ -91,7 +91,6 @@
       </form>
     </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary" form="formnuevacard">Enviar tarjeta</button>
       </div>
     </div>
@@ -99,6 +98,12 @@
 </div>
 
 <div class="timeline">
+    
+    {% if not cards %}
+      <div class="row d-flex text-center">
+        <h1> No hay Cards para mostrar </h1>
+      </div>
+    {% else %}
     <div class="titulo-cards text-center"><h2 class="">{{ cardsTitulo }}</h2></div>
     {% for x in cards %}
       <div class="tm-container {% if x.left == True %} left {% else %} right {% endif %}">
@@ -134,7 +139,8 @@
           <div class="card-footer">
               <h6 class="card-">De: {{ x.id_prop }} </h6>
               <small class="text-muted">Enviado hace:  {{ x.creacion }}</small>
-          <div>
+          <!-- ICONOS OCULTOS POR AHORA -->
+          <div class="icons" hidden>
             <a href="#" class="card-link"><i class="fa fa-share-nodes"></i></a>
             <a href="#" class="card-link"><i class="fa fa-envelope"></i></a>
             <a href="#" class="card-link"><i class="fa fa-star"></i></a>
@@ -143,7 +149,8 @@
       </div>
       </div>
       {% endfor %}
-      <button class="btn btn-info btn-float" type="button" data-bs-toggle="modal" data-bs-target="#modal-card">Crear Card <i class="fa fa-plus"></i></button>
+      {% endif %}
+      <button class="btn btn-float" type="button" data-bs-toggle="modal" data-bs-target="#modal-card">Crear Card <i class="fa fa-plus"></i></button>
     </div>
 
     <script type="text/javascript">

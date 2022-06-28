@@ -9,7 +9,9 @@ urlpatterns = [
     path('lostpswd', views.lostpswd, name='lostpswd'),
     path('logout', LogoutView.as_view(), name= 'logout'),
     path('dashboard', views.dashboard, name='dashboard'),
+    path('editarPerfil', views.editarPerfil),
     path('nuevaCard', views.nuevaCard),
+    path('imagenPerfil', views.imagenPerfil),
     ## JSONS
     path('getUsers', views.getUsers),
     path('getCard', views.getRandon),
