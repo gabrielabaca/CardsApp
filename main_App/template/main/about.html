@@ -1,0 +1,25 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block Main %}
+
+<section class="container-fluid col-lg-8 about-bg align-content-center">
+    <div class="row justify-content-center" style="height: 100%">
+        <h2 class="text-uppercase">Hello world!</h2>
+        <h3>Mi nombre es Lucio Gabriel Abaca</h3>
+
+        <p>Este proyecto fue creado con 
+            <strong>Bootstrap 5.2</strong>,
+            <strong>FontsAwesome V6</strong>,
+            <strong>DJANGO {{ django_version }}</strong>, 
+            <strong>Python {{ python_version }}</strong>
+        </p>
+        <div class="row align-items-center">
+            <a class="btn col-lg-4" href="https://github.com/gabrielabaca" target="_blank"><i class="fa fa-brands fa-github-square"></i> GitHub</a>
+            <a class="btn col-lg-4" href="https://www.linkedin.com/in/luciogabrielabaca/" target="_blank"><i class="fa fa-brands fa-linkedin-in"></i> Linkedin</a>
+            <a class="btn col-lg-4" href="mailto:gabrielabaca@live.com.ar" target="_blank"><i class="fa fa-envelope"></i> Mail</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

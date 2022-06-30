@@ -1,14 +1,14 @@
-from typing import TextIO
-from django import http
-from django.shortcuts import redirect, render,HttpResponse
+import django
+import platform
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User, UserManager
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.http import JsonResponse
 from main_App.forms import FormularioRegister, FormularioEditarPerfil
 from .models import Usuarios, Perfil_Links, Cards, Categorias_Cards, Relacion_Cards
-from datetime import timedelta
+
 
 # Create your views here.
 
@@ -75,7 +75,7 @@ def dashboard(request):
     if(request.GET):
         #Recibidas
         if request.GET['action'] == 'recibidas':
-            for x in Relacion_Cards.objects.filter(id_usr_to__iexact = request.user.id):
+            for x in Relacion_Cards.objects.filter(id_usr_to__iexact = request.user.id).order_by('-id'):
                 cards.append({i:{}})
                 dates = timezone.now() - x.id_card.creacion
                 cards[i].update({
@@ -99,7 +99,7 @@ def dashboard(request):
         
         #Enviadas
         if (request.GET['action'] == 'enviadas'):
-            for x in Relacion_Cards.objects.filter(id_usr__iexact = request.user.id):
+            for x in Relacion_Cards.objects.filter(id_usr__iexact = request.user.id).order_by('-id'):
                 cards.append({i:{}})
                 dates = timezone.now() - x.id_card.creacion
                 cards[i].update({
@@ -123,7 +123,7 @@ def dashboard(request):
         
     #Todas las tarjetas
     
-    for x in Cards.objects.all():
+    for x in Cards.objects.all().order_by('-id'):
         cards.append({i:{}})
         dates = timezone.now() - x.creacion
         cards[i].update({
@@ -152,6 +152,7 @@ def nuevaCard(request):
     if request.POST:
         faicon = ''
         categoria = ''
+        privada = 0
         if request.POST['card-categoria'] == '1' :
             faicon = 'fa-cake-candles'
             categoria = 'Aniversario'
@@ -164,13 +165,15 @@ def nuevaCard(request):
         elif request.POST['card-categoria'] == '4' :
             faicon = 'fa-heart'
             categoria = 'SanValentin'
-        
+        if request.POST == 'card-privada':
+            privada = 2
+
         card = Cards(
             titulo = request.POST['card-titulo'],
             icon = faicon,
             texto = request.POST['card-mensaje'],
             categoria = request.POST['card-categoria'],
-            estado = ('2' if(request.POST['card-privada'] == 'card-privada') else '0'),
+            estado = privada,
             )
         
         card.save()
@@ -188,7 +191,7 @@ def nuevaCard(request):
         )
 
         cCard.save()
-        return HttpResponse(f'CARD-ID: {card.id} rCardID: {rCard.id} cCardID: {cCard.id}')
+        return redirect(dashboard)
         
 @login_required(login_url='ingresar')
 def imagenPerfil(request):
@@ -259,6 +262,11 @@ def editarPerfil(request):
             
 
     return render(request, 'main/editarperfil.html', {'datos':datosUsuario, 'perfilCards':perfilcards,'links':links})
+
+
+def about(request):
+
+    return render(request,'main/about.html',{'django_version':django.VERSION[0:3], 'python_version': platform.python_version})
 
 ##JSONS
 @login_required(login_url='ingresar')

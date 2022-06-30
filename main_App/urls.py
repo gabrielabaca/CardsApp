@@ -12,6 +12,7 @@ urlpatterns = [
     path('editarPerfil', views.editarPerfil),
     path('nuevaCard', views.nuevaCard),
     path('imagenPerfil', views.imagenPerfil),
+    path('about', views.about, name='about'),
     ## JSONS
     path('getUsers', views.getUsers),
     path('getCard', views.getRandon),

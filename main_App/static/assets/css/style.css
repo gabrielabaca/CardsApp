@@ -4,8 +4,8 @@
 .m-dash{
   padding-top: 10vh;
   overflow: hidden;
-  
 }
+
 
 /*--------------------------------------------------------------
 # Sections 
@@ -292,7 +292,22 @@ font-size: 19px;
   transition-duration: 2s;
 }
 
+/*--------------------------------------------------------------
+# About
+--------------------------------------------------------------*/
+.about-bg{}
 
+.about-bg .btn{
+  margin-top: 25px
+}
+.about-bg p{
+  margin-top:2%;
+  margin-bottom: 5%;
+}
+.about-bg strong:hover{
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
 /*--------------------------------------------------------------
 # Timeline
 --------------------------------------------------------------*/
