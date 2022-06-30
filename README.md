@@ -1,6 +1,8 @@
 # CardsApp
 
 'CardsApp' es una webapp de envio de tarjetas entre usuarios.
+ 
+ [VER VIDEO](https://drive.google.com/file/d/1emguz9m3ucbL1kxfCFRWAd6emCRbs3gI/view?usp=sharing)
 
 
 ## Prerequisitos
@@ -15,6 +17,11 @@ pip install pillow
 ```bash
 python3 manage.py runserver
 ```
+
+## Usuario de prueba
+- Usuario: admin
+- contraseña: qwe123
+
 
 ## Participantes
 ### Lucio Gabriel Abaca
