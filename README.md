@@ -3,7 +3,7 @@
 'CardsApp' es una webapp de envio de tarjetas entre usuarios.
  
  [VER VIDEO](https://drive.google.com/file/d/1emguz9m3ucbL1kxfCFRWAd6emCRbs3gI/view?usp=sharing)
-
+ [WEB](https://cardsdjango.herokuapp.com/)
 
 ## Prerequisitos
 
